@@ -1,20 +1,31 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { config } from "@gluestack-ui/config";
+import { GluestackUIProvider, SafeAreaView } from "@gluestack-ui/themed";
+import { AuthenticationProvider } from "./src/contexts/useAuthenticationContext";
+import { AppNavigation } from "./src/navigation/AppNavigation";
+import { Platform, StatusBar } from "react-native";
+import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const isAndorid = Platform.OS === "android";
+
+export const queryClient = new QueryClient();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <>
+      <SafeAreaView
+        flex={1}
+        marginTop={isAndorid ? StatusBar.currentHeight : 0}
+      >
+        <GluestackUIProvider config={config}>
+          <QueryClientProvider client={queryClient}>
+            <AuthenticationProvider>
+              <AppNavigation />
+            </AuthenticationProvider>
+          </QueryClientProvider>
+        </GluestackUIProvider>
+      </SafeAreaView>
+      <ExpoStatusBar style="auto"></ExpoStatusBar>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
