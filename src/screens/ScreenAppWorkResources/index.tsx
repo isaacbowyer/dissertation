@@ -27,6 +27,7 @@ export const WorkResourcesScreen = () => {
 
           {UI.WORK_RESOURCES?.map((resource) => (
             <HorizitonalCard
+              key={resource.label}
               label={resource.label}
               buttonLabel="View"
               description={resource.description}

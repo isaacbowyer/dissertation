@@ -5,18 +5,21 @@ import { useSymptomsContext } from "../../../contexts/useSymptomsContext";
 import { ISymptom } from "../../../entities/ISymptom";
 import { INITAL_OPTION, INITAL_SYMPTOM } from "../../../data/defaultValues";
 import { IAddSymptomFormState } from "../../../entities/IAddSymptomFormState";
-import { IAddSymptomStateKey } from "../../../entities/IAddSymptomStateKey";
-import { IAddSymptomStateKeyValue } from "../../../entities/IAddSymptomStateKeyValue";
 import { IOption } from "../../../entities/IOption";
 import { filterSymptoms } from "../../../utils/filterSymptoms";
 import { useSeverityRatings } from "../../../hooks/useSeverityRatings";
 import { useTrackedSymptoms } from "../../../hooks/useTrackedSymptoms";
-import { retrieveUnusedSymptoms } from "../../../utils/retrieveUnusedSymptoms";
 import { services } from "../../../services";
 import { auth } from "../../../config/firebase";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ISymptomState } from "../../../entities/ISymptomState";
+import { createSeverityList } from "../../../utils/createSeverityList";
+import { useCurrentEntityContext } from "../../../contexts/useCurrentEntityContext";
+import { filterUsedSymptoms } from "../../../utils/filterUsedSymptoms";
+import { IAddSymptomFormStateKey } from "../../../entities/IAddSymptomFormStateKey";
+import { IAddSymptomFormStateKeyValue } from "../../../entities/IAddSymptomFormStateKeyValue";
+import { adjustSeverityValue } from "../../../utils/adjustSeverityValue";
 
 const AddSymptomContext = createContext({} as IAddSymptomContext);
 
@@ -40,16 +43,16 @@ export const AddSymptomProvider = ({ children }: IProviderProps) => {
   const toast = useCustomToast();
   const { data: symptoms, isFetching: isFetchingSymptoms } =
     useSymptomsContext();
-  const severityList = useSeverityRatings();
-  const { state: trackedSymptomsState, methods: trackedSymptomsMethods } =
-    useTrackedSymptoms({});
-
+  const { severityOptions, formattedSeverityOptions } = useSeverityRatings();
+  const { state: trackedSymptomsState } = useTrackedSymptoms({});
+  const { currentSymptomPage, setCurrentSymptomPage } =
+    useCurrentEntityContext();
   const [symptomState, setSymptomState] =
     useState<ISymptomState>(INITAL_SYMPTOM_STATE);
   const [formState, setFormState] =
     useState<IAddSymptomFormState>(INITAL_FORM_STATE);
 
-  const symptomList = retrieveUnusedSymptoms(
+  const symptomList = filterUsedSymptoms(
     symptoms,
     trackedSymptomsState?.trackedSymptoms
   );
@@ -77,9 +80,15 @@ export const AddSymptomProvider = ({ children }: IProviderProps) => {
   }, [formState?.search]);
 
   const handleOnChange = (
-    key: IAddSymptomStateKey,
-    value: IAddSymptomStateKeyValue
+    key: IAddSymptomFormStateKey,
+    value: IAddSymptomFormStateKeyValue
   ) => {
+    if (key === "currentSeverity" || key === "targetSeverity") {
+      const formattedValue = adjustSeverityValue(value);
+      setFormState((prev) => ({ ...prev, [key]: formattedValue }));
+      return;
+    }
+
     setFormState((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -116,8 +125,14 @@ export const AddSymptomProvider = ({ children }: IProviderProps) => {
         comment: "Added First Severity Rating",
       });
 
-      setFormState(INITAL_FORM_STATE);
+      await services.post.notification({
+        userId: auth?.currentUser?.uid,
+        title: "Added New Symptom",
+        subTitle: `You added “${formState?.selectedSymptom?.name}” to your Tracked Symptoms list`,
+      });
 
+      setCurrentSymptomPage(currentSymptomPage + 1);
+      setFormState(INITAL_FORM_STATE);
       toast.successToast("Successfully added the new symptom");
       navigation.navigate("User Symptoms");
     } catch (e: any) {
@@ -146,7 +161,16 @@ export const AddSymptomProvider = ({ children }: IProviderProps) => {
           isFetching: isFetching,
           isLoading: formState?.isLoading,
           isDisabled: isDisabled,
-          severityList: severityList,
+          targetSeverityList: createSeverityList({
+            severityList: formattedSeverityOptions,
+            selectedSeverity: formState?.currentSeverity,
+            type: "target",
+          }),
+          currentSeverityList: createSeverityList({
+            severityList: formattedSeverityOptions,
+            selectedSeverity: formState?.targetSeverity,
+            type: "current",
+          }),
         },
         methods: {
           handleOnChange: handleOnChange,
@@ -175,12 +199,13 @@ interface IAddSymptomContext {
     isLoading: boolean;
     isFetching: boolean;
     isDisabled: boolean;
-    severityList: IOption[];
+    targetSeverityList: IOption[];
+    currentSeverityList: IOption[];
   };
   methods: {
     handleOnChange: (
-      key: IAddSymptomStateKey,
-      value: IAddSymptomStateKeyValue
+      key: IAddSymptomFormStateKey,
+      value: IAddSymptomFormStateKeyValue
     ) => void;
     handleOnSubmit: () => void;
     handleOnSelect: (item: ISymptom) => void;

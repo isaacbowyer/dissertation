@@ -11,7 +11,7 @@ import { LabelError } from "../LabelError";
 import { useEffect, useState } from "react";
 
 interface IInputProps {
-  label: string;
+  label?: string;
   value: string;
   type?: "underlined" | "rounded" | "outline";
   onChange?: (e: any) => void;
@@ -50,7 +50,7 @@ export const Input = ({
   return (
     <VStack space="xs">
       <FormControl isReadOnly={isDisabled} isInvalid={!!helpText}>
-        {!placeholder ? <Label>{label}</Label> : null}
+        {label ? <Label>{label}</Label> : null}
 
         <GluestackInput variant={type} size="sm">
           <InputField
@@ -62,7 +62,7 @@ export const Input = ({
 
           {icon && (
             <InputSlot pr="$3">
-              <InputIcon as={icon} />
+              <InputIcon as={icon} data-testid="input-icon" />
             </InputSlot>
           )}
         </GluestackInput>

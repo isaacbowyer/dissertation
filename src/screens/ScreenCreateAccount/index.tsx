@@ -1,9 +1,9 @@
 import { VStack } from "@gluestack-ui/themed";
 import { Text } from "../../components/atoms/Text";
 import { PublicTemplateContainer } from "../../components/templates/PublicTemplateContainer";
-import { PersonalDetails } from "./components/PersonalDetails";
-import { PasswordDetails } from "./components/PasswordDetails";
-import { CompanyDetails } from "./components/CompanyDetails";
+import { PersonalDetails } from "../../components/organisms/PersonalDetails";
+import { PasswordDetails } from "../../components/organisms/PasswordDetails";
+import { CompanyDetails } from "../../components/organisms/CompanyDetails";
 import { Link } from "../../components/atoms/Link";
 import { Button } from "../../components/atoms/Button";
 import { CreateAccountProvider, useCreateAccountContext } from "./context";
@@ -53,7 +53,7 @@ const CreateAccount = () => {
             text="Create Account"
             onPress={methods.handleSubmit}
             isDisabled={state.isDisabled}
-            isLoading={state.values.isLoading}
+            isLoading={state.isLoading}
           />
 
           <VStack alignItems="center" justifyContent="center" mb="$4">

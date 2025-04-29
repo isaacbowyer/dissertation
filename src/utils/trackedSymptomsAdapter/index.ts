@@ -1,8 +1,14 @@
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore/lite";
 import { ITrackedSymptom } from "../../entities/ITrackedSymptom";
 import { Timestamp } from "firebase/firestore";
+import { getSeverityType } from "../getSeverityType";
+import { ISymptom } from "../../entities/ISymptom";
+import { findOption } from "../findOption";
 
-export const trackedSymptomsAdapter: ITrackedSymptomsAdapter = (docs) => {
+export const trackedSymptomsAdapter: ITrackedSymptomsAdapter = (
+  docs,
+  symptomList = []
+) => {
   const symptoms = docs?.map((doc) => {
     const data = doc?.data();
 
@@ -15,8 +21,12 @@ export const trackedSymptomsAdapter: ITrackedSymptomsAdapter = (docs) => {
       userId: data?.userId,
       currentSeverity: data?.currentSeverity,
       targetSeverity: data?.targetSeverity,
+      severityType: getSeverityType(data?.currentSeverity),
       targetDate: targetTimestamp?.toDate(),
       createdAt: createdAtTimestamp?.toDate(),
+      name: symptomList?.length
+        ? findOption(symptomList, "id", data?.symptomId)?.name
+        : "",
     };
   });
 
@@ -25,6 +35,7 @@ export const trackedSymptomsAdapter: ITrackedSymptomsAdapter = (docs) => {
 
 interface ITrackedSymptomsAdapter {
   (
-    docs: QueryDocumentSnapshot<DocumentData, DocumentData>[]
+    docs: QueryDocumentSnapshot<DocumentData, DocumentData>[],
+    symptomList?: ISymptom[]
   ): ITrackedSymptom[];
 }

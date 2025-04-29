@@ -7,7 +7,6 @@ import { IResourceResponse } from "../../entities/IResourceResponse";
 import { calculateNumberOfPages } from "../../utils/calculateNumberOfPages";
 import { getLimit } from "../../utils/getLimit";
 import { IResourceWithLike } from "../../entities/IResourceWithLike";
-import { IResourceTypeTag } from "../../entities/IResourceTypeTag";
 import { IOption } from "../../entities/IOption";
 
 const INITAL_DATA: IResourceResponse = {
@@ -15,21 +14,29 @@ const INITAL_DATA: IResourceResponse = {
   results: [],
 };
 
-export const useResources = (props: IProps): IResourcesResponse => {
+export const useResources = ({
+  limit,
+  source,
+  refId,
+  currentPage,
+  name,
+  skip,
+}: IProps): IResourcesResponse => {
   const { state } = useAuthenticationContext();
 
   const toast = useCustomToast();
 
   const { data, isFetching, refetch } = useQuery(
-    ["/resources", props?.limit, props?.skip, props?.source, props?.refId],
+    ["/resources", limit, source, currentPage],
     async () => {
       const data = await services.composition.resources({
+        refId: refId,
         userId: auth?.currentUser?.uid,
-        refId: props?.refId,
-        name: props?.name,
-        limit: getLimit(props?.limit, props?.currentPage),
-        currentPage: props?.currentPage,
-        type: props?.source,
+        type: source,
+        limit: getLimit(limit, currentPage),
+        skip: skip,
+        currentPage: currentPage,
+        name: name,
       });
 
       return data;
@@ -37,6 +44,7 @@ export const useResources = (props: IProps): IResourcesResponse => {
     {
       enabled: state?.isAuthenticated,
       onError: (e) => {
+        console.log("ERROR", e);
         toast.errorToast("Failed to load resources");
       },
       onSuccess: () => {
@@ -81,9 +89,9 @@ interface IResourcesResponse {
 
 interface IProps {
   limit: number;
-  skip: number;
   source: IOption;
   currentPage?: number;
   name: "work" | "symptom";
   refId: string;
+  skip: number;
 }

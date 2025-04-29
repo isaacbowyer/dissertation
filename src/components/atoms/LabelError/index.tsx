@@ -12,7 +12,7 @@ export const LabelError = ({ children }: ILabelErrorProps) => {
   return (
     <FormControlError>
       <FormControlErrorIcon as={ICONS.ALERT} />
-      <FormControlErrorText>{children}</FormControlErrorText>
+      <FormControlErrorText width={310}>{children}</FormControlErrorText>
     </FormControlError>
   );
 };

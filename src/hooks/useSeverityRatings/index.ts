@@ -16,5 +16,22 @@ export const useSeverityRatings = () => {
     "10",
   ]);
 
-  return severityOptions;
+  const formattedSeverityOptions: IOption[] = createDropdownOptions([
+    "0 (Best)",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10 (Worst)",
+  ]);
+
+  return {
+    severityOptions,
+    formattedSeverityOptions,
+  };
 };

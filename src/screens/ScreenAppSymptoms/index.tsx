@@ -6,11 +6,11 @@ import { ICONS } from "../../data/icons";
 import { Button } from "../../components/atoms/Button";
 import { AdvancedSearch } from "../../components/organisms/AdvancedSearch";
 import { HeaderWithSearch } from "../../components/organisms/HeaderWithSearch";
-import { SymptomSkeleton } from "../../components/modules/SymptomSkeleton";
 import { SymptomContainer } from "../../components/organisms/SymptomContainer";
 import { SubHeaderWithTags } from "../../components/modules/SubHeaderWithTags";
 import { IllustrationStateEmpty } from "../../components/modules/IllustrationState.Empty";
 import { IllustrationInvalidSearch } from "../../components/modules/IllustrationState.InvalidSearch";
+import { IllustrationStateLoading } from "../../components/modules/IllustrationState.Loading";
 
 const Symptoms = () => {
   const { state, methods } = useTrackedSymptomsContext();
@@ -29,24 +29,24 @@ const Symptoms = () => {
             }}
             isFetching={state?.isFetching}
           />
-
           {state?.isSearchActive ? (
             <AdvancedSearch
               state={{
-                symptom: state?.symptom,
+                symptom: state?.symptomName,
                 severityType: state?.severityType,
                 targetRating: state?.targetRating,
                 currentRating: state?.currentRating,
                 targetDate: state?.targetDate,
                 ratingList: state?.ratingOptions,
                 severityList: state?.severityTypeOptions,
+                source: state?.source,
               }}
               methods={{
                 handleOnChange: methods.handleSetSearch,
+                handleSetSymptomName: methods.handleSetSymptomName,
               }}
             />
           ) : null}
-
           <SubHeaderWithTags
             pageCount={state?.totalPages}
             currentPage={state?.currentPage}
@@ -59,42 +59,38 @@ const Symptoms = () => {
             tagList={state?.tagList}
           />
 
-          {state.isFetching ? (
-            <VStack space="md" mb="$8">
-              <SymptomSkeleton />
-              <SymptomSkeleton />
-            </VStack>
-          ) : null}
+          <VStack w="$full">
+            {state.screenState === "loading" ? (
+              <IllustrationStateLoading skeletonType="symptom" />
+            ) : null}
 
-          {!state?.symptoms?.length &&
-          !state.isFetching &&
-          state.source === "current" ? (
-            <IllustrationStateEmpty message="You are not tracking any symptoms yet" />
-          ) : null}
+            {state.screenState === "empty" ? (
+              <IllustrationStateEmpty message="You are not tracking any symptoms yet" />
+            ) : null}
 
-          {!state?.symptoms?.length &&
-          !state.isFetching &&
-          (state.source !== "current" || state?.isSearchActive) ? (
-            <IllustrationInvalidSearch loadWhat="symptoms" />
-          ) : null}
+            {state.screenState === "invalidSearch" ? (
+              <IllustrationInvalidSearch loadWhat="symptoms" />
+            ) : null}
 
-          {state?.symptoms?.length ? (
-            <>
-              <SymptomContainer
-                items={state?.symptoms}
-                handleOnDelete={methods?.handleOnDelete}
-                handleOnView={methods.handleOnPress}
-              />
-              <Pagination
-                totalItems={state?.count}
-                pageSize={state?.limit}
-                currentPage={state?.currentPage}
-                onPageChange={(newPage) =>
-                  methods.handleOnChange("currentPage", newPage)
-                }
-              />
-            </>
-          ) : null}
+            {state.screenState === "results" ? (
+              <>
+                <SymptomContainer
+                  items={state?.symptoms}
+                  isLoading={state?.isLoading}
+                  handleOnDelete={methods?.handleOnDelete}
+                  handleOnView={methods.handleOnPress}
+                />
+                <Pagination
+                  totalItems={state?.count}
+                  pageSize={state?.limit}
+                  currentPage={state?.currentPage}
+                  onPageChange={(newPage) =>
+                    methods.handleOnChange("currentPage", newPage)
+                  }
+                />
+              </>
+            ) : null}
+          </VStack>
 
           <Button.Solid
             icon={ICONS.ADD}

@@ -8,7 +8,7 @@ import {
 } from "firebase/firestore";
 import { ISymptomScore } from "../../entities/ISymptomScore";
 import { db } from "../../config/firebase";
-import { symptomIdScoresAdapter } from "../../utils/symptomIdScoresAdapter";
+import { scoresAdapter } from "../../utils/scoresAdapter";
 import { IUserIdWithSymptomId } from "../../entities/IUserIdWithSymptomId";
 
 export const getSymptomScores: IGetSymptomScoresService = async (props) => {
@@ -32,7 +32,7 @@ export const getSymptomScores: IGetSymptomScoresService = async (props) => {
 
   const { docs } = await getDocs(collectionQuery);
 
-  return symptomIdScoresAdapter(docs);
+  return scoresAdapter(docs);
 };
 
 interface IGetSymptomScoresService {

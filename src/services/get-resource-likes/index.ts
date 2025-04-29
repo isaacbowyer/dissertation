@@ -7,8 +7,9 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "../../config/firebase";
-import { IUserLike } from "../../entities/IUserLike";
 import { IResource } from "../../entities/IResource";
+import { resourceWithLikeAdapter } from "../../utils/resourceWithLikeAdapter";
+import { IResourceWithLike } from "../../entities/IResourceWithLike";
 
 export const getResourceLikes: IGetResourceLikesService = async (props) => {
   const likesRef = collection(db, "resource_likes");
@@ -24,14 +25,12 @@ export const getResourceLikes: IGetResourceLikesService = async (props) => {
       (doc) => doc?.data()?.userId === props?.userId
     );
 
-    const isLiked = !!foundDocument;
-
-    return {
-      resourceId: doc?.id,
+    return resourceWithLikeAdapter({
+      userId: props?.userId,
+      resource: doc,
+      likedResourceId: foundDocument?.id || "",
       numberOfLikes: likesDocs?.length || 0,
-      isLiked: isLiked,
-      likedId: isLiked ? foundDocument?.id : "",
-    };
+    });
   });
 
   const resourceLikes = await Promise.all(resourceLikesPromises);
@@ -45,5 +44,5 @@ interface IPayload {
 }
 
 interface IGetResourceLikesService {
-  (props: IPayload): Promise<IUserLike[]>;
+  (props: IPayload): Promise<IResourceWithLike[]>;
 }

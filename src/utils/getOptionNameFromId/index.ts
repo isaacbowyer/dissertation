@@ -3,7 +3,7 @@ import { IOption } from "../../entities/IOption";
 export const getOptionNameFromId: IGetOptionNameFromIdUtil = (items, id) => {
   if (!items?.length) return "";
 
-  const item = items.find((item) => item?.id === id);
+  const item = items.find((item) => item?.id == id);
 
   if (!item) return "";
 
@@ -11,5 +11,5 @@ export const getOptionNameFromId: IGetOptionNameFromIdUtil = (items, id) => {
 };
 
 interface IGetOptionNameFromIdUtil {
-  (items: IOption[], id: number): string;
+  (items: IOption[], id: string): string;
 }

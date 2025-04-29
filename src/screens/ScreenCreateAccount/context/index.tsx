@@ -3,25 +3,24 @@ import { useCountries } from "../../../hooks/useCountries";
 import { useCustomToast } from "../../../hooks/useCustomToast";
 import { useGenders } from "../../../hooks/useGenders";
 import { useIndustries } from "../../../hooks/useIndustries";
-import { ICreateAccountState } from "../../../entities/ICreateAccountState";
 import { validateText } from "../../../utils/validateText";
 import { VALIDATION_ERRORS } from "../../../data/errors";
 import { validateEmail } from "../../../utils/validateEmail";
 import { validatePassword } from "../../../utils/validatePassword";
 import { compareValues } from "../../../utils/compareValues";
-import { ICreateAccountValidationError } from "../../../entities/ICreateAccountValidationError";
 import { validateCreateAccountState } from "../../../utils/validateCreateAccountState";
 import { IOption } from "../../../entities/IOption";
-import { ICreateAccountStateKey } from "../../../entities/ICreateAccountStateKey";
-import { ICreateAccountStateKeyValue } from "../../../entities/ICreateAccountStateKeyValue";
 import { IProviderProps } from "../../../entities/IProviderProps";
 import { services } from "../../../services";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { INITAL_OPTION } from "../../../data/defaultValues";
+import { IPersonalAccountState } from "../../../entities/IPersonalAccountState";
+import { IPersonalAccountStateKey } from "../../../entities/IPersonalAccountStateKey";
+import { IPersonalAccountStateKeyValue } from "../../../entities/IPersonalAccountStateKeyValue";
+import { IPersonalAccountStateValidationError } from "../../../entities/IPersonalAccountStateValidationError";
 
-const INITAL_STATE: ICreateAccountState = {
-  isLoading: false,
+const INITAL_STATE: IPersonalAccountState = {
   firstName: "",
   lastName: "",
   email: "",
@@ -43,11 +42,13 @@ export const CreateAccountProvider = ({ children }: IProviderProps) => {
   const genders = useGenders();
   const toast = useCustomToast();
 
-  const [formState, setFormState] = useState<ICreateAccountState>(INITAL_STATE);
+  const [formState, setFormState] =
+    useState<IPersonalAccountState>(INITAL_STATE);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   // STATE METHODS
   const _handleSetLoading = (boolean: boolean) => {
-    setFormState((prev) => ({ ...prev, isLoading: boolean }));
+    setIsLoading(boolean);
   };
 
   const _handleResetState = () => {
@@ -56,8 +57,8 @@ export const CreateAccountProvider = ({ children }: IProviderProps) => {
 
   // ACTION METHODS
   const handleOnChange = (
-    key: ICreateAccountStateKey,
-    value: ICreateAccountStateKeyValue
+    key: IPersonalAccountStateKey,
+    value: IPersonalAccountStateKeyValue
   ) => {
     setFormState((prev) => ({ ...prev, [key]: value }));
   };
@@ -78,7 +79,7 @@ export const CreateAccountProvider = ({ children }: IProviderProps) => {
         country: formState?.country,
       });
 
-      toast.successToast("Account created. You can now Log In");
+      toast.successToast("Please verify your email before you login");
       navigation.navigate("Log In");
       _handleResetState();
     } catch (e: any) {
@@ -88,7 +89,7 @@ export const CreateAccountProvider = ({ children }: IProviderProps) => {
     }
   };
 
-  const validationError: ICreateAccountValidationError = {
+  const validationError: IPersonalAccountStateValidationError = {
     firstName: validateText(formState.firstName) ? "" : VALIDATION_ERRORS.NAME,
     lastName: validateText(formState.lastName) ? "" : VALIDATION_ERRORS.NAME,
     email: validateEmail(formState.email) ? "" : VALIDATION_ERRORS.EMAIL,
@@ -119,6 +120,7 @@ export const CreateAccountProvider = ({ children }: IProviderProps) => {
       value={{
         state: {
           isDisabled: isDisabled,
+          isLoading: isLoading,
           validationError: validationError,
           industryOptions: industries,
           countryOptions: countries,
@@ -143,16 +145,17 @@ export const useCreateAccountContext = () => {
 interface ICreateAccountContext {
   state: {
     isDisabled: boolean;
-    validationError: ICreateAccountValidationError;
+    isLoading: boolean;
+    validationError: IPersonalAccountStateValidationError;
     industryOptions: IOption[];
     countryOptions: IOption[];
     genderOptions: IOption[];
-    values: ICreateAccountState;
+    values: IPersonalAccountState;
   };
   methods: {
     handleOnChange: (
-      key: ICreateAccountStateKey,
-      value: ICreateAccountStateKeyValue
+      key: IPersonalAccountStateKey,
+      value: IPersonalAccountStateKeyValue
     ) => void;
     handleSubmit: () => void;
   };

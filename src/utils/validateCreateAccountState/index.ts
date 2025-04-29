@@ -1,5 +1,5 @@
-import { ICreateAccountValidationError } from "../../entities/ICreateAccountValidationError";
 import { IOption } from "../../entities/IOption";
+import { IPersonalAccountStateValidationError } from "../../entities/IPersonalAccountStateValidationError";
 
 export const validateCreateAccountState: IValidateCreateAccountStateUtil = ({
   validationError,
@@ -18,7 +18,7 @@ export const validateCreateAccountState: IValidateCreateAccountStateUtil = ({
 };
 
 interface IProps {
-  validationError: ICreateAccountValidationError;
+  validationError: IPersonalAccountStateValidationError;
   industry: IOption;
   gender: IOption;
   country: IOption;

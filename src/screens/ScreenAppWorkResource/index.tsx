@@ -44,6 +44,7 @@ const WorkResources = () => {
             numberOfUsers={state?.numberOfUsers}
             resources={state?.resources}
             isFetching={state?.isFetching}
+            screenState={state?.screenState}
             tagList={state?.tagList}
             source={state.activeSource}
             types={state?.resourceTypes}

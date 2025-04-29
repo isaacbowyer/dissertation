@@ -10,6 +10,7 @@ interface IDatePicker {
   onChange: (e: any, selectedDate: Date) => void;
   maxDate?: Date;
   minDate?: Date;
+  isDisabled?: boolean;
 }
 
 export const DatePicker = ({
@@ -18,10 +19,12 @@ export const DatePicker = ({
   onChange,
   maxDate,
   minDate,
+  isDisabled = false,
 }: IDatePicker) => {
   const formattedDate = !!date ? formatDate(date) : "";
 
   const showDatepicker = () => {
+    if (isDisabled) return;
     DateTimePickerAndroid.open({
       value: !!date ? date : new Date(),
       onChange,
@@ -36,6 +39,7 @@ export const DatePicker = ({
     <Pressable onPress={showDatepicker}>
       <Input
         label={label}
+        placeholder={"dd/mm/yyyy"}
         value={formattedDate}
         icon={ICONS.CALANDER}
         isDisabled={true}

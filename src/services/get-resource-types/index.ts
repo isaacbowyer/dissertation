@@ -7,7 +7,11 @@ export const getResourceTypes: IGetResourceTypesService = async () => {
   const { docs } = await getDocs(collection(db, "types"));
 
   const options = optionsAdapter(docs);
-  return [...options, { id: "91sehfsdfs221", name: "All" }];
+  return [
+    ...options,
+    { id: "91sehfsdfs221", name: "All" },
+    { id: "12ahu0pies998", name: "Favourites" },
+  ];
 };
 
 interface IGetResourceTypesService {

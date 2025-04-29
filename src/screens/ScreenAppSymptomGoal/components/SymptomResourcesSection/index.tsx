@@ -21,7 +21,7 @@ interface ISymptomResourcesSectionProps {
   tagList: string[];
   source: string;
   types: IOption[];
-  handleOnView: (link: string) => void;
+  handleOnView: (item: IResourceWithLike) => void;
   handleOnLike: (item: IResourceWithLike) => void;
   handleOnChange: (
     key: ISymptomGoalStateKey,

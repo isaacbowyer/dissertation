@@ -1,13 +1,13 @@
-import { VStack } from "@gluestack-ui/themed";
+import { VStack, Pressable, HStack } from "@gluestack-ui/themed";
 import { Text } from "../../components/atoms/Text";
 import { PublicTemplateContainer } from "../../components/templates/PublicTemplateContainer";
 import { Input } from "../../components/atoms/Input";
 import { ICONS } from "../../data/icons";
 import { InputPassword } from "../../components/atoms/InputPassword";
 import { Button } from "../../components/atoms/Button";
-import { HStack } from "@gluestack-ui/themed";
 import { Link } from "../../components/atoms/Link";
 import { useAuthenticationContext } from "../../contexts/useAuthenticationContext";
+import { GoogleButton } from "../../components/atoms/GoogleButton";
 
 export const LogInScreen = ({ navigation }) => {
   // AUTH
@@ -69,9 +69,20 @@ export const LogInScreen = ({ navigation }) => {
               <Link.Small
                 bold
                 label="Reset Password"
-                screen="Home"
+                screen="Forgot Password"
               ></Link.Small>
             </HStack>
+
+            <Text.Regular bold textAlign="center">
+              OR
+            </Text.Regular>
+
+            <GoogleButton
+              handleOnPress={() => {
+                methods.promptAsync();
+              }}
+            />
+
             <Link.Regular label="Return to Home" screen="Home"></Link.Regular>
           </VStack>
         </VStack>

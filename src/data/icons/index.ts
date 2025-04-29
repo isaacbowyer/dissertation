@@ -12,6 +12,9 @@ import {
   ChevronRightIcon,
   ChevronUpIcon,
   FavouriteIcon,
+  ThreeDotsIcon,
+  BellIcon,
+  DownloadIcon,
 } from "@gluestack-ui/themed";
 import { AddIcon } from "@gluestack-ui/themed";
 
@@ -30,4 +33,7 @@ export const ICONS = {
   SEARCH: SearchIcon,
   DELETE: TrashIcon,
   HEART: FavouriteIcon,
+  DOTS: ThreeDotsIcon,
+  BELL: BellIcon,
+  DOWNLOAD: DownloadIcon,
 };

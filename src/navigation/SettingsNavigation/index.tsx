@@ -17,10 +17,6 @@ export const SettingsNavigation = () => {
         name="Personal Profile"
         component={PersonalProfileScreen}
       />
-      <SettingsStack.Screen
-        name="Notifications"
-        component={NotificationsScreen}
-      />
     </SettingsStack.Navigator>
   );
 };

@@ -1,3 +1,3 @@
 export const validateText = (text: string) => {
-  return text?.length >= 3;
+  return text?.length >= 1;
 };

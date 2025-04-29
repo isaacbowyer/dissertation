@@ -45,7 +45,7 @@ export const HorizitonalCard = ({
         <Text.Small bold>{label}</Text.Small>
         <Text.Small color="gray">{description}</Text.Small>
         <HStack justifyContent="flex-end" marginRight="$8">
-          <HStack style={{ width: 105 }}>
+          <HStack style={{ width: 110 }}>
             <Button.Outline
               text={buttonLabel}
               onPress={handleOnPress}

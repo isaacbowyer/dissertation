@@ -6,10 +6,8 @@ import { services } from "../../../services";
 import { SERVICES_LIMITS } from "../../../config/services";
 import { IOption } from "../../../entities/IOption";
 import { useUsersContext } from "../../../contexts/useUsersContext";
-import { IResource } from "../../../entities/IResource";
 import { auth } from "../../../config/firebase";
 import { Linking } from "react-native";
-import { IResourceTypeTag } from "../../../entities/IResourceTypeTag";
 import { findOption } from "../../../utils/findOption";
 import { useResourceTypesContext } from "../../../contexts/useResourceTypesContext";
 import { IResourceWithLike } from "../../../entities/IResourceWithLike";
@@ -19,19 +17,19 @@ import { useResourceCategoriesContext } from "../../../contexts/useResourceCateg
 import { IWorkResource } from "../../../entities/IWorkResource";
 import { IWorkResourceStateKey } from "../../../entities/IWorkResourceStateKey";
 import { IWorkResourceStateKeyValue } from "../../../entities/IWorkResourceStateKeyValue";
+import { decideScreenStateToRender } from "../../../utils/decideScreenStateToRender";
+import { IRenderOptionsOutput } from "../../../entities/IRenderOptionsOutput";
+import { validateOptionsBasedOnBoolean } from "../../../utils/validateOptionsBasedOnBoolean";
+import { filterTags } from "../../../utils/filterTags";
 
 const WorkResourcesContext = createContext({} as IWorkResourcesContext);
-
-const TAGS: IResourceTypeTag[] = ["All", "Website", "Video"];
 
 export const WorkResourcesProvider = ({ children }: IProviderProps) => {
   const toast = useCustomToast();
   const { currentWorkResource } = useCurrentEntityContext();
-  const { data: users, isFetching: isFetchingUsers } = useUsersContext();
-  const { data: resourceTypes, isFetching: isFetchingTypes } =
-    useResourceTypesContext();
-  const { data: resourceCategories, isFetching: isFetchingCategories } =
-    useResourceCategoriesContext();
+  const { data: users } = useUsersContext();
+  const { data: resourceTypes } = useResourceTypesContext();
+  const { data: resourceCategories } = useResourceCategoriesContext();
 
   const INITIAL_STATE: IWorkResourceState = {
     currentPage: 1,
@@ -39,22 +37,27 @@ export const WorkResourcesProvider = ({ children }: IProviderProps) => {
     source: "All",
   };
 
-  console.log(resourceCategories);
-
   const [state, setState] = useState<IWorkResourceState>(INITIAL_STATE);
 
   const LIMIT = SERVICES_LIMITS.DEFAULT_LIMIT;
   const SKIP = (state?.currentPage - 1) * LIMIT;
 
+  const resourceName = currentWorkResource?.label;
+
   const { state: resourcesState, methods: resourcesMethods } = useResources({
     limit: LIMIT,
-    skip: SKIP,
     source: findOption(resourceTypes, "name", state?.source),
     currentPage: state?.currentPage,
     name: "work",
-    refId: findOption(resourceCategories, "name", currentWorkResource?.label)
-      ?.id,
+    skip: SKIP,
+    refId: validateOptionsBasedOnBoolean(
+      resourceName !== "Favourites",
+      findOption(resourceCategories, "name", resourceName)?.id,
+      "Favourites"
+    ),
   });
+
+  const filteredTags = filterTags(resourceName);
 
   // ACTION METHODS
   const _handleSetLoading = (bool: boolean) => {
@@ -87,6 +90,24 @@ export const WorkResourcesProvider = ({ children }: IProviderProps) => {
     }
   };
 
+  const handleOnViewResource = async (resource: IResourceWithLike) => {
+    const typeName = findOption(resourceTypes, "id", resource.typeId)?.name;
+
+    if (typeName !== "Document")
+      return Linking.openURL(resource.link).catch((err) =>
+        toast.errorToast("Unable to open this resource")
+      );
+
+    try {
+      const url = await services.get.file(resource.link);
+
+      Linking.openURL(url);
+    } catch (e: any) {
+      console.log("ERROR", e);
+      toast.errorToast("Unable to open this resource");
+    }
+  };
+
   const handleOnChange = (
     key: IWorkResourceStateKey,
     value: IWorkResourceStateKeyValue
@@ -97,16 +118,13 @@ export const WorkResourcesProvider = ({ children }: IProviderProps) => {
       return setState((prev) => ({ ...prev, currentPage: 1 }));
   };
 
-  const handleOnViewResource = (link: string) => {
-    Linking.openURL(link).catch((err) =>
-      toast.errorToast("Unable to open this resource link")
-    );
-  };
-  const isFetching =
-    resourcesState.isFetching ||
-    isFetchingUsers ||
-    isFetchingTypes ||
-    isFetchingCategories;
+  const isInvalidSearch = state.source !== "All" && !resourcesState.totalCount;
+
+  const screenState = decideScreenStateToRender({
+    isFetching: resourcesState.isFetching,
+    isInvalidSearch: isInvalidSearch,
+    entriesLength: resourcesState.resources.length,
+  });
 
   return (
     <WorkResourcesContext.Provider
@@ -114,7 +132,7 @@ export const WorkResourcesProvider = ({ children }: IProviderProps) => {
         state: {
           currentResource: currentWorkResource,
           activeSource: state?.source,
-          isFetching: isFetching,
+          isFetching: resourcesState.isFetching,
           currentPage: state?.currentPage,
           count: resourcesState.totalCount,
           totalPages: resourcesState.totalPages,
@@ -122,7 +140,8 @@ export const WorkResourcesProvider = ({ children }: IProviderProps) => {
           numberOfUsers: users?.count,
           resources: resourcesState?.resources,
           resourceTypes: resourceTypes,
-          tagList: TAGS,
+          tagList: filteredTags,
+          screenState: screenState,
         },
         methods: {
           handleOnLike: handleOnLikeResource,
@@ -153,10 +172,11 @@ interface IWorkResourcesContext {
     resources: IResourceWithLike[];
     resourceTypes: IOption[];
     tagList: string[];
+    screenState: IRenderOptionsOutput;
   };
   methods: {
     handleOnLike: (item: IResourceWithLike) => void;
-    handleOnView: (link: string) => void;
+    handleOnView: (item: IResourceWithLike) => void;
     handleOnChange: (
       key: IWorkResourceStateKey,
       value: IWorkResourceStateKeyValue

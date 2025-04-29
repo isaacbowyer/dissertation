@@ -10,9 +10,12 @@ import { Text } from "../../components/atoms/Text";
 import { Button } from "../../components/atoms/Button";
 import { OverallProgressCard } from "../../components/organisms/OverallProgressCard";
 import { SymptomResourcesSection } from "./components/SymptomResourcesSection";
+import { Tags } from "../../components/modules/Tags";
 
 const SymptomGoal = () => {
   const { state, methods } = useSymptomGoalContext();
+
+  const formattedChartType = state.chartType.toLowerCase();
 
   return (
     <PrivateTemplateContainer
@@ -34,26 +37,34 @@ const SymptomGoal = () => {
 
           <Divider my="$0.5" />
 
-          {state?.averageScores?.length > 1 ? (
-            <VStack>
-              <Accordion
-                title="Chart View"
-                isDisabled={state?.isFetching}
-                hiddenSection={
-                  <VStack>
+          <Accordion
+            title="Chart View"
+            isDisabled={state?.isFetching}
+            hiddenSection={
+              <VStack space="md">
+                {!state.isFetching ? (
+                  <>
+                    <Tags
+                      tagList={state.chartTags}
+                      active={state.chartType}
+                      handleSetActive={(value) =>
+                        methods.handleOnChange("chartType", value)
+                      }
+                    />
                     <Chart scores={state?.averageScores} />
                     <Text.Regular color="gray" fontStyle="italic">
                       The chart plots data from the latest daily reports over
-                      the past four months, calculating the average severity
-                      rating for each month.
+                      the past {state.averageScoresLimit} {formattedChartType}s,
+                      calculating the average severity rating for each{" "}
+                      {formattedChartType}.
                     </Text.Regular>
-                  </VStack>
-                }
-              />
+                  </>
+                ) : null}
+              </VStack>
+            }
+          />
 
-              <Divider my="$0.5" />
-            </VStack>
-          ) : null}
+          <Divider my="$0.5" />
 
           <Accordion
             title="Symptom Resources"
@@ -66,7 +77,7 @@ const SymptomGoal = () => {
                 numberOfUsers={state?.numberOfUsers}
                 resources={state?.resources}
                 isFetching={state?.isFetching}
-                tagList={state?.tagList}
+                tagList={state?.resourceTags}
                 source={state.activeSource}
                 types={state?.resourceTypes}
                 handleOnChange={methods.handleOnChange}
@@ -83,14 +94,20 @@ const SymptomGoal = () => {
             isDisabled={state?.isFetching}
             hiddenSection={
               <VStack width="$full" space="xl">
-                <Select
-                  selectedOption={state?.targetSeverity}
-                  label="Target Score"
-                  items={state?.severityList}
-                  onChange={(value) =>
-                    methods.handleOnChange("targetSeverity", value)
-                  }
-                />
+                <VStack space="md">
+                  <Select
+                    selectedOption={state?.formattedTargetSeverity}
+                    label="Target Severity"
+                    items={state.severityList}
+                    onChange={(value) =>
+                      methods.handleOnChange("targetSeverity", value)
+                    }
+                  />
+
+                  <Text.Regular color="gray" fontStyle="italic">
+                    This value must be lower than the Current Severity
+                  </Text.Regular>
+                </VStack>
 
                 <DatePicker
                   label="Target Date"
@@ -98,7 +115,7 @@ const SymptomGoal = () => {
                   onChange={(event, newDate) =>
                     methods.handleOnChange("targetDate", newDate)
                   }
-                  maxDate={new Date()}
+                  minDate={new Date()}
                 />
               </VStack>
             }
@@ -106,10 +123,33 @@ const SymptomGoal = () => {
 
           <Divider mt="$0.5" mb="$8" />
 
-          <Button.Solid
-            text="Track Symptom Progress"
-            onPress={methods.handleOnPress}
-          />
+          <VStack space="md" width="$full">
+            <Button.Solid
+              text="Track Symptom Progress"
+              onPress={methods.handleOnPress}
+              isDisabled={state?.isButtonDisabled}
+            />
+            {!state?.isButtonDisabled ? (
+              <Text.Small fontStyle="italic" textAlign="center">
+                You can submit a severity score for each symptom once every 24
+                hours.
+              </Text.Small>
+            ) : null}
+
+            {state?.isButtonDisabled && !state?.isPastDateReached ? (
+              <Text.Small fontStyle="italic" textAlign="center">
+                You have allready submitted a severity score for this symptom
+                today.
+              </Text.Small>
+            ) : null}
+
+            {state?.isPastDateReached ? (
+              <Text.Small fontStyle="italic" textAlign="center">
+                You can no longer track the progress of this symptom because the
+                target date has passed.
+              </Text.Small>
+            ) : null}
+          </VStack>
         </VStack>
       }
     />

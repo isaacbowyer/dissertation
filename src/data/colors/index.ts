@@ -6,4 +6,5 @@ export const colors = {
   sky_blue: "#758BFD",
   dark_blue: "#696AC3",
   light_gray: "#FFFBFA",
+  charkcoal: "#CBCBD4",
 };

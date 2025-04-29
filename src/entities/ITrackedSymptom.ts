@@ -1,3 +1,5 @@
+import { ISeverityType } from "./ISeverityType";
+
 export interface ITrackedSymptom {
   id: string;
   symptomId: string;
@@ -6,4 +8,6 @@ export interface ITrackedSymptom {
   createdAt: Date;
   targetSeverity: number;
   currentSeverity: number;
+  severityType: ISeverityType;
+  name?: string;
 }

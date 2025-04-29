@@ -1,7 +1,7 @@
 import { HStack, VStack } from "@gluestack-ui/themed";
 import { Text } from "../../atoms/Text";
 import { SubHeaderWithTagsSkeleton } from "../SubHeaderWithTagsSkeleton";
-import { HeaderTags } from "../HeaderTags";
+import { Tags } from "../Tags";
 
 interface ISubHeaderProps {
   pageCount?: number;
@@ -35,7 +35,7 @@ export const SubHeaderWithTags = ({
 
   return (
     <VStack space="md">
-      <HeaderTags
+      <Tags
         tagList={tagList}
         active={activeSource}
         handleSetActive={handleOnChange}

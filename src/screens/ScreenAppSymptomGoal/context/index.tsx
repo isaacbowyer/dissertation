@@ -17,19 +17,28 @@ import { ISymptomGoalStateKeyValue } from "../../../entities/ISymptomGoalStateKe
 import { ISymptomGoalState } from "../../../entities/ISymptomGoalState";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { IResourceTypeTag } from "../../../entities/IResourceTypeTag";
 import { findOption } from "../../../utils/findOption";
 import { useResourceTypesContext } from "../../../contexts/useResourceTypesContext";
 import { IResourceWithLike } from "../../../entities/IResourceWithLike";
 import { useResources } from "../../../hooks/useResources";
-const SymptomGoalContext = createContext({} as ISymptomGoalContext);
+import { findTodaysDateInScores } from "../../../utils/findTodaysDateInScores";
+import { createSeverityList } from "../../../utils/createSeverityList";
+import { checkPastDate } from "../../../utils/checkIsPastDate";
+import { INITAL_TAGS } from "../../../data/defaultValues";
+import { IChartType } from "../../../entities/IChartType";
+import { IResourceTypeTag } from "../../../entities/IResourceTypeTag";
+import { calculateAverageScores } from "../../../utils/calculateAverageScores";
+import { adjustSeverityValue } from "../../../utils/adjustSeverityValue";
+import { addWorstOrBestToSeverity } from "../../../utils/addWorstOrBestToSeverity";
 
-const TAGS: IResourceTypeTag[] = ["All", "Website", "Video"];
+const CHART_TAGS: IChartType[] = ["Week", "Month"];
+
+const SymptomGoalContext = createContext({} as ISymptomGoalContext);
 
 export const SymptomGoalProvider = ({ children }: IProviderProps) => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const toast = useCustomToast();
-  const severityList = useSeverityRatings();
+  const { severityOptions, formattedSeverityOptions } = useSeverityRatings();
   const { currentSymptom } = useCurrentEntityContext();
   const { data: users, isFetching: isFetchingUsers } = useUsersContext();
   const { data: resourceTypes, isFetching: isFetchingTypes } =
@@ -37,7 +46,7 @@ export const SymptomGoalProvider = ({ children }: IProviderProps) => {
 
   const INITIAL_STATE: ISymptomGoalState = {
     targetSeverity: findOption(
-      severityList,
+      severityOptions,
       "name",
       String(currentSymptom?.targetSeverity)
     ),
@@ -45,6 +54,7 @@ export const SymptomGoalProvider = ({ children }: IProviderProps) => {
     currentPage: 1,
     isLoading: false,
     source: "All",
+    chartType: "Week",
   };
 
   const [state, setState] = useState<ISymptomGoalState>(INITIAL_STATE);
@@ -52,15 +62,23 @@ export const SymptomGoalProvider = ({ children }: IProviderProps) => {
   const LIMIT = SERVICES_LIMITS.DEFAULT_LIMIT;
   const SKIP = (state?.currentPage - 1) * LIMIT;
 
-  const { averageScores, isFetching: isFetchingRatings } = useSymptomRatings();
+  const { scores, isFetching: isFetchingRatings } = useSymptomRatings();
+
+  const averageScoresLimit = state.chartType === "Week" ? 5 : 4;
+
+  const averageScores = calculateAverageScores({
+    data: scores,
+    interval: state.chartType,
+    limit: averageScoresLimit,
+  });
 
   const { state: resourcesState, methods: resourcesMethods } = useResources({
     limit: LIMIT,
-    skip: SKIP,
     source: findOption(resourceTypes, "name", state?.source),
     currentPage: state?.currentPage,
     name: "symptom",
     refId: currentSymptom?.symptomId,
+    skip: SKIP,
   });
 
   // ACTION METHODS
@@ -82,6 +100,12 @@ export const SymptomGoalProvider = ({ children }: IProviderProps) => {
         targetDate: newTargetDate,
       });
 
+      await services.post.notification({
+        userId: auth?.currentUser?.uid,
+        title: "Updated Symptom Details",
+        subTitle: `You adjusted your “${currentSymptom?.name}” symptom details.`,
+      });
+
       toast.successToast("Successfully updated the symptom's details");
     } catch (e: any) {
       toast.errorToast("Unable to update the symptom. Try again later");
@@ -94,16 +118,28 @@ export const SymptomGoalProvider = ({ children }: IProviderProps) => {
     key: ISymptomGoalStateKey,
     value: ISymptomGoalStateKeyValue
   ) => {
-    setState((prev) => ({ ...prev, [key]: value }));
-
-    if (key === "targetDate")
+    if (key === "targetDate") {
+      setState((prev) => ({ ...prev, targetDate: value as Date }));
       return _handleOnEdit(value as Date, state?.targetSeverity);
+    }
 
-    if (key === "targetSeverity")
-      return _handleOnEdit(state?.targetDate, value as IOption);
+    if (key === "targetSeverity") {
+      const formattedValue = adjustSeverityValue(value);
+      setState((prev) => ({ ...prev, targetSeverity: formattedValue }));
+      return _handleOnEdit(state?.targetDate, formattedValue as IOption);
+    }
 
     if (key === "source")
-      return setState((prev) => ({ ...prev, currentPage: 1 }));
+      return setState((prev) => ({
+        ...prev,
+        source: value as IResourceTypeTag,
+        currentPage: 1,
+      }));
+
+    setState((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
   };
 
   const handleOnLikeResource = async (resource: IResourceWithLike) => {
@@ -132,8 +168,8 @@ export const SymptomGoalProvider = ({ children }: IProviderProps) => {
     }
   };
 
-  const handleOnViewResource = (link: string) => {
-    Linking.openURL(link).catch((err) =>
+  const handleOnViewResource = (resource: IResourceWithLike) => {
+    Linking.openURL(resource?.link).catch((err) =>
       toast.errorToast("Unable to open this resource link")
     );
   };
@@ -141,6 +177,9 @@ export const SymptomGoalProvider = ({ children }: IProviderProps) => {
   const handleOnTrackSymptom = () => {
     navigation.navigate("Symptom Progress");
   };
+
+  const isPastDateReached = checkPastDate(state?.targetDate);
+  const isButtonDisabled = findTodaysDateInScores(scores) || isPastDateReached;
 
   const isFetching =
     isFetchingRatings ||
@@ -155,20 +194,36 @@ export const SymptomGoalProvider = ({ children }: IProviderProps) => {
           title: currentSymptom?.name,
           currentSeverity: currentSymptom?.currentSeverity,
           targetSeverity: state?.targetSeverity,
+          formattedTargetSeverity: addWorstOrBestToSeverity(
+            state?.targetSeverity
+          ),
           targetDate: state?.targetDate,
           activeSource: state?.source,
           daysLeft: getDaysLeft(state?.targetDate),
           isFetching: isFetching,
+          isButtonDisabled: isButtonDisabled,
+          isPastDateReached: isPastDateReached,
           currentPage: state?.currentPage,
           count: resourcesState.totalCount,
           totalPages: resourcesState.totalPages,
           limit: LIMIT,
-          severityList: severityList,
+          severityList: createSeverityList({
+            severityList: formattedSeverityOptions,
+            selectedSeverity: findOption(
+              severityOptions,
+              "name",
+              String(currentSymptom?.currentSeverity)
+            ),
+            type: "target",
+          }),
           averageScores: averageScores,
           numberOfUsers: users?.count,
           resources: resourcesState?.resources,
           resourceTypes: resourceTypes,
-          tagList: TAGS,
+          resourceTags: INITAL_TAGS,
+          chartTags: CHART_TAGS,
+          chartType: state.chartType,
+          averageScoresLimit: averageScoresLimit,
         },
         methods: {
           handleOnChange: handleOnChange,
@@ -192,10 +247,13 @@ interface ISymptomGoalContext {
     title: string;
     currentSeverity: number;
     targetSeverity: IOption;
+    formattedTargetSeverity: IOption;
     targetDate: Date;
     daysLeft: number;
     activeSource: string;
     isFetching: boolean;
+    isButtonDisabled: boolean;
+    isPastDateReached: boolean;
     currentPage: number;
     count: number;
     totalPages: number;
@@ -205,7 +263,10 @@ interface ISymptomGoalContext {
     numberOfUsers: number;
     resources: IResourceWithLike[];
     resourceTypes: IOption[];
-    tagList: string[];
+    resourceTags: IResourceTypeTag[];
+    chartTags: IChartType[];
+    chartType: IChartType;
+    averageScoresLimit: number;
   };
   methods: {
     handleOnChange: (
@@ -214,6 +275,6 @@ interface ISymptomGoalContext {
     ) => void;
     handleOnPress: () => void;
     handleOnLike: (item: IResourceWithLike) => void;
-    handleOnView: (link: string) => void;
+    handleOnView: (item: IResourceWithLike) => void;
   };
 }

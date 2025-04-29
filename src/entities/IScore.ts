@@ -1,18 +1,4 @@
 export interface IScore {
   averageScore: number;
-  month: IMonth;
+  interval: string;
 }
-
-type IMonth =
-  | "January"
-  | "February"
-  | "March"
-  | "April"
-  | "May"
-  | "June"
-  | "July"
-  | "August"
-  | "September"
-  | "October"
-  | "November"
-  | "December";

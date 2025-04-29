@@ -28,7 +28,8 @@ const AddSymptom = () => {
           <Divider mt="$0.5" mb="$4" />
 
           <RatingSymptomSection
-            severityList={state?.severityList}
+            currentSeverityList={state?.currentSeverityList}
+            targetSeverityList={state?.targetSeverityList}
             targetDate={state?.targetDate}
             currentSeverity={state?.currentSeverity}
             targetSeverity={state?.targetSeverity}

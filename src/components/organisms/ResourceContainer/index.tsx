@@ -8,7 +8,7 @@ interface IResourceContainer {
   items: IResourceWithLike[];
   types: IOption[];
   numberOfUsers: number;
-  handleOnView: (link: string) => void;
+  handleOnView: (item: IResourceWithLike) => void;
   handleOnLike: (item: IResourceWithLike) => void;
 }
 
@@ -33,7 +33,7 @@ export const ResourceContainer = ({
           numberOfLikes={item?.numberOfLikes}
           isLiked={item?.isLiked}
           handleOnLike={() => handleOnLike(item)}
-          handleOnView={() => handleOnView(item?.link)}
+          handleOnView={() => handleOnView(item)}
         />
       ))}
     </VStack>

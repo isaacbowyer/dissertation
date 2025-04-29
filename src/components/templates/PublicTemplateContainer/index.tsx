@@ -3,8 +3,6 @@ import {
   HStack,
   ScrollView,
   KeyboardAvoidingView,
-  Input,
-  InputField,
 } from "@gluestack-ui/themed";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { Keyboard } from "react-native";
@@ -78,7 +76,7 @@ export const PublicTemplateContainer = ({
       </ScrollView>
 
       {!isKeyboardVisible && (
-        <HStack width="$full" space="3xl">
+        <HStack width="$full" justifyContent="space-between">
           <Text.ExtraSmall color="gray">Terms and Conditons</Text.ExtraSmall>
           <Text.ExtraSmall color="gray">Data Protection</Text.ExtraSmall>
           <Text.ExtraSmall color="gray">Cookie Policy</Text.ExtraSmall>

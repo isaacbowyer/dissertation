@@ -10,7 +10,7 @@ export const Chart = ({ scores }: IChart) => {
     <LineChart
       data={{
         labels: scores?.map((data) => {
-          return data.month;
+          return data.interval;
         }),
         datasets: [
           {

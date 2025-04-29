@@ -6,8 +6,8 @@ import { ICONS } from "../../../data/icons";
 import { getResourceButtonLabel } from "../../../utils/getResourceButtonLabel";
 import { IconButton } from "../../atoms/IconButton";
 import { displayFavouriteIndicatorMessage } from "../../../utils/displayFavouriteIndicatorMessage";
-import { IResourceTypeTag } from "../../../entities/IResourceTypeTag";
 import { Text } from "../../atoms/Text";
+import { DownloadIcon } from "../../atoms/DownloadIcon";
 
 interface IUserCardProps {
   companyName: string;
@@ -96,13 +96,17 @@ export const ResourceCard = ({
         </VStack>
 
         <HStack width="$full" justifyContent="flex-end">
-          <HStack style={{ width: 200 }}>
-            <Button.Outline
-              text={getResourceButtonLabel(resourceType)}
-              onPress={handleOnView}
-              icon={ICONS.CHEVRON_RIGHT}
-            ></Button.Outline>
-          </HStack>
+          {resourceType !== "Document" ? (
+            <HStack style={{ width: 200 }}>
+              <Button.Outline
+                text={getResourceButtonLabel(resourceType)}
+                onPress={handleOnView}
+                icon={ICONS.CHEVRON_RIGHT}
+              ></Button.Outline>
+            </HStack>
+          ) : (
+            <DownloadIcon handleOnView={handleOnView} />
+          )}
         </HStack>
       </VStack>
     </VStack>

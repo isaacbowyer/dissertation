@@ -6,23 +6,25 @@ import { Text } from "../../atoms/Text";
 import { Image } from "@gluestack-ui/themed";
 import { Button } from "../../atoms/Button";
 import { ICONS } from "../../../data/icons";
-import { displayDate } from "../../../utils/displayDate";
+import { displaySymptomProgressMessage } from "../../../utils/displaySymptomProgressMessage";
 
 interface ISymptomCardProps {
   label: string;
   severityType: ISeverityType;
-  imageUri: string;
+  currentSeverity: number;
+  targetSeverity: number;
   targetDate: Date;
-  handleOnDelete: () => void;
+  handleOnOpen: () => void;
   handleOnView: () => void;
 }
 
 export const SymptomCard = ({
   label,
   severityType,
-  imageUri,
+  currentSeverity,
+  targetSeverity,
   targetDate,
-  handleOnDelete,
+  handleOnOpen,
   handleOnView,
 }: ISymptomCardProps) => {
   return (
@@ -48,7 +50,7 @@ export const SymptomCard = ({
           source={require("../../../../assets/symptom.jpg")}
           alt="Symptom Image"
         />
-        <DeleteIcon handleOnPress={handleOnDelete} />
+        <DeleteIcon handleOnPress={handleOnOpen} />
       </HStack>
       <VStack width="$full" space="sm">
         <VStack space="xs">
@@ -70,8 +72,11 @@ export const SymptomCard = ({
           <Text.Small bold>Progress</Text.Small>
           <HStack>
             <Text.Small>
-              You are Off-Target of completing your Target Severity rating,
-              which is scheduled for the {displayDate(targetDate)}
+              {displaySymptomProgressMessage({
+                targetDate: targetDate,
+                currentSeverity: currentSeverity,
+                targetSeverity: targetSeverity,
+              })}
             </Text.Small>
           </HStack>
         </VStack>

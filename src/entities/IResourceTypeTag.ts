@@ -1,1 +1,6 @@
-export type IResourceTypeTag = "Document" | "Website" | "Video" | "All";
+export type IResourceTypeTag =
+  | "Document"
+  | "Website"
+  | "Video"
+  | "All"
+  | "Favourites";

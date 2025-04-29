@@ -7,6 +7,9 @@ import { ITrackedSymptom } from "../../entities/ITrackedSymptom";
 import { auth } from "../../config/firebase";
 import { useAuthenticationContext } from "../../contexts/useAuthenticationContext";
 import { SERVICES_LIMITS } from "../../config/services";
+import { getLimit } from "../../utils/getLimit";
+import { useSymptomsContext } from "../../contexts/useSymptomsContext";
+import { useCurrentEntityContext } from "../../contexts/useCurrentEntityContext";
 
 const INIITAL_DATA: ITrackedSymptomsResponse = {
   count: 0,
@@ -14,22 +17,36 @@ const INIITAL_DATA: ITrackedSymptomsResponse = {
 };
 
 export const useTrackedSymptoms = ({
-  skip = 0,
-  limit = SERVICES_LIMITS.UNLIMITED,
+  limit = SERVICES_LIMITS.EXPANDED_LIMIT,
   source = "all",
   currentPage = 1,
+  skip = 0,
+  config = [],
 }: IProps): IUseTrackedSymptomsResponse => {
   const { state } = useAuthenticationContext();
+  const { data: symptomList } = useSymptomsContext();
+  const { currentSymptomPage } = useCurrentEntityContext();
+
   const toast = useCustomToast();
 
   const { data, isFetching, refetch } = useQuery(
-    ["/tracked_symptoms", source, limit, skip],
+    [
+      "/tracked_symptoms",
+      source,
+      limit,
+      currentPage,
+      config,
+      currentSymptomPage,
+    ],
     async () => {
       const data = await services.get.trackedSymptoms({
         userId: auth?.currentUser?.uid,
         source: source,
         currentPage: currentPage,
-        limit: limit,
+        limit: getLimit(limit, currentPage),
+        config: config,
+        skip: skip,
+        symptomList: symptomList,
       });
 
       return data;
@@ -44,13 +61,8 @@ export const useTrackedSymptoms = ({
       },
       initialData: INIITAL_DATA,
       refetchOnWindowFocus: false,
-      refetchInterval: 15000,
     }
   );
-
-  const refetchTrackedSymptoms = () => {
-    refetch();
-  };
 
   const trackedSymptoms = data?.results || [];
   const trackedSymptomsCount = data?.count || 0;
@@ -64,7 +76,7 @@ export const useTrackedSymptoms = ({
       isFetching: isFetching,
     },
     methods: {
-      handleOnRefetch: refetchTrackedSymptoms,
+      handleOnRefetch: refetch,
     },
   };
 };
@@ -82,8 +94,9 @@ interface IUseTrackedSymptomsResponse {
 }
 
 interface IProps {
-  skip?: number;
   limit?: number;
+  skip?: number;
   source?: string;
   currentPage?: number;
+  config?: any[];
 }

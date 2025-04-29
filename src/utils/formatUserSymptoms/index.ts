@@ -1,7 +1,5 @@
 import { ISymptom } from "../../entities/ISymptom";
 import { ITrackedSymptom } from "../../entities/ITrackedSymptom";
-import { IUserSymptom } from "../../entities/IUserSymptom";
-import { getSeverityType } from "../getSeverityType";
 
 export const formatUserSymptoms: IFormatUserSymptomsUtil = (props) => {
   const userSymptoms = props?.trackedSymptoms?.map((trackedSymptom) => {
@@ -21,7 +19,7 @@ export const formatUserSymptoms: IFormatUserSymptomsUtil = (props) => {
       targetDate: trackedSymptom?.targetDate,
       targetSeverity: trackedSymptom?.targetSeverity,
       currentSeverity: currentSeverity,
-      severityType: getSeverityType(currentSeverity),
+      severityType: trackedSymptom?.severityType,
     };
   });
 
@@ -34,5 +32,5 @@ interface IPayload {
 }
 
 interface IFormatUserSymptomsUtil {
-  (props: IPayload): IUserSymptom[];
+  (props: IPayload): ITrackedSymptom[];
 }

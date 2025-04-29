@@ -9,6 +9,8 @@ import { ResourceSkeleton } from "../../../../components/modules/ResourceSkeleto
 import { ResourceContainer } from "../../../../components/organisms/ResourceContainer";
 import Pagination from "@cherry-soft/react-native-basic-pagination";
 import { IllustrationInvalidSearch } from "../../../../components/modules/IllustrationState.InvalidSearch";
+import { IRenderOptionsOutput } from "../../../../entities/IRenderOptionsOutput";
+import { IllustrationStateLoading } from "../../../../components/modules/IllustrationState.Loading";
 
 interface IWorkResourcesSectionProps {
   title: string;
@@ -22,7 +24,8 @@ interface IWorkResourcesSectionProps {
   tagList: string[];
   source: string;
   types: IOption[];
-  handleOnView: (link: string) => void;
+  screenState: IRenderOptionsOutput;
+  handleOnView: (item: IResourceWithLike) => void;
   handleOnLike: (item: IResourceWithLike) => void;
   handleOnChange: (
     key: IWorkResourceStateKey,
@@ -42,37 +45,13 @@ export const WorkResourcesSection = ({
   source,
   types,
   title,
+  screenState,
   handleOnView,
   handleOnLike,
   handleOnChange,
 }: IWorkResourcesSectionProps) => {
-  if (!resources.length && !isFetching)
-    return (
-      <>
-        <SubHeaderWithTags
-          pageCount={totalPages}
-          currentPage={currentPage}
-          entriesCount={count}
-          currentEntries={resources.length}
-          isFetching={isFetching}
-          label="resources"
-          tagList={tagList}
-          activeSource={source}
-          handleOnChange={(val) => handleOnChange("source", val)}
-        />
-
-        {source == "All" ? (
-          <IllustrationStateEmpty
-            message={`There are no resources available for ${title} yet.`}
-          />
-        ) : (
-          <IllustrationInvalidSearch loadWhat="resources" />
-        )}
-      </>
-    );
-
   return (
-    <VStack>
+    <VStack w="$full">
       <SubHeaderWithTags
         pageCount={totalPages}
         currentPage={currentPage}
@@ -85,12 +64,21 @@ export const WorkResourcesSection = ({
         handleOnChange={(val) => handleOnChange("source", val)}
       />
 
-      {isFetching ? (
-        <VStack space="md">
-          <ResourceSkeleton />
-          <ResourceSkeleton />
-        </VStack>
-      ) : (
+      {screenState === "loading" ? (
+        <IllustrationStateLoading skeletonType="resource" />
+      ) : null}
+
+      {screenState === "empty" ? (
+        <IllustrationStateEmpty
+          message={`There are no resources available for ${title} yet.`}
+        />
+      ) : null}
+
+      {screenState === "invalidSearch" ? (
+        <IllustrationInvalidSearch loadWhat="resources" />
+      ) : null}
+
+      {screenState === "results" ? (
         <>
           <ResourceContainer
             numberOfUsers={numberOfUsers}
@@ -107,7 +95,7 @@ export const WorkResourcesSection = ({
             onPageChange={(newPage) => handleOnChange("currentPage", newPage)}
           />
         </>
-      )}
+      ) : null}
     </VStack>
   );
 };

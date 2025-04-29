@@ -2,6 +2,12 @@ import { IWorkResource } from "../../entities/IWorkResource";
 
 const WORK_RESOURCES: IWorkResource[] = [
   {
+    label: "Favourites",
+    description:
+      "Quickly access your favorite work resources for easy viewing.",
+    image: require("../../../assets/favourites.png"),
+  },
+  {
     label: "Employee Rights",
     description:
       "Understand employer obligations regarding long COVID accommodations and workplace safety.",

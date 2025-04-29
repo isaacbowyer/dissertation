@@ -5,8 +5,11 @@ import { AppNavigation } from "./src/navigation/AppNavigation";
 import { Platform, StatusBar } from "react-native";
 import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { LogBox } from "react-native";
 
 const isAndorid = Platform.OS === "android";
+
+LogBox.ignoreAllLogs(); 
 
 export const queryClient = new QueryClient();
 
