@@ -1,4 +1,4 @@
-import { VStack, Pressable, HStack } from "@gluestack-ui/themed";
+import { VStack, HStack } from "@gluestack-ui/themed";
 import { Text } from "../../components/atoms/Text";
 import { PublicTemplateContainer } from "../../components/templates/PublicTemplateContainer";
 import { Input } from "../../components/atoms/Input";
@@ -72,16 +72,6 @@ export const LogInScreen = ({ navigation }) => {
                 screen="Forgot Password"
               ></Link.Small>
             </HStack>
-
-            <Text.Regular bold textAlign="center">
-              OR
-            </Text.Regular>
-
-            <GoogleButton
-              handleOnPress={() => {
-                methods.promptAsync();
-              }}
-            />
 
             <Link.Regular label="Return to Home" screen="Home"></Link.Regular>
           </VStack>

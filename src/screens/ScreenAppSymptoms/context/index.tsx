@@ -219,13 +219,6 @@ export const useTrackedSymptomsContext = () => {
 interface ITrackedSymptomsContext {
   state: {
     isFetching: boolean;
-<<<<<<< HEAD
-    currentPage: number;
-    count: number;
-    totalPages: number;
-    limit: number;
-    symptoms: IUserSymptom[];
-=======
     isLoading: boolean;
     screenState: IRenderOptionsOutput;
     currentPage: number;
@@ -234,7 +227,6 @@ interface ITrackedSymptomsContext {
     totalPages: number;
     limit: number;
     symptoms: ITrackedSymptom[];
->>>>>>> 863213a (Initial commit)
     source: string;
     tagList: string[];
     severityTypeOptions: IOption[];
@@ -247,13 +239,8 @@ interface ITrackedSymptomsContext {
     severityType: IOption;
   };
   methods: {
-<<<<<<< HEAD
-    handleOnDelete: (symptom: IUserSymptom) => void;
-    handleOnPress: (symptom: IUserSymptom) => void;
-=======
     handleOnDelete: (symptom: ITrackedSymptom) => void;
     handleOnPress: (symptom: ITrackedSymptom) => void;
->>>>>>> 863213a (Initial commit)
     handleOnAdd: () => void;
     handleOnChange: (
       key: IAppSymptomsStateKey,
@@ -263,10 +250,7 @@ interface ITrackedSymptomsContext {
       key: IAdvancedSearchStateKey,
       value: IAdvancedSearchStateKeyValue
     ) => void;
-<<<<<<< HEAD
-=======
     handleSetSymptomName: (value: string) => void;
->>>>>>> 863213a (Initial commit)
     handleToggleSearch: () => void;
   };
 }

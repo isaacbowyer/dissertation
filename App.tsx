@@ -3,13 +3,13 @@ import { GluestackUIProvider, SafeAreaView } from "@gluestack-ui/themed";
 import { AuthenticationProvider } from "./src/contexts/useAuthenticationContext";
 import { AppNavigation } from "./src/navigation/AppNavigation";
 import { Platform, StatusBar } from "react-native";
-import ExpoStatusBar from "expo-status-bar/build/ExpoStatusBar";
+import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LogBox } from "react-native";
 
 const isAndorid = Platform.OS === "android";
 
-LogBox.ignoreAllLogs(); 
+LogBox.ignoreAllLogs();
 
 export const queryClient = new QueryClient();
 
