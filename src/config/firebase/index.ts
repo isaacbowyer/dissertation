@@ -1,17 +1,17 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getDownloadURL, getStorage, ref } from "firebase/storage";
+import { getStorage } from "firebase/storage";
 
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAm5LBqHT60zb0yfkbfx4Bu7iWHmS2M6i0",
-  authDomain: "occupational-health-b555f.firebaseapp.com",
-  projectId: "occupational-health-b555f",
-  storageBucket: "occupational-health-b555f.appspot.com",
-  messagingSenderId: "997033588545",
-  appId: "1:997033588545:web:ed934368b69403cb0793c0",
-  measurementId: "G-TMNL8M1V6F",
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 initializeApp(firebaseConfig);
