@@ -17,7 +17,7 @@
     "@gluestack-ui/config": "^1.1.20",
     "@gluestack-ui/themed": "^1.1.73",
     "@legendapp/motion": "^2.4.0",
-    "@react-email/components": "0.0.16",
+    "@react-email/components": "^0.0.38",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/datetimepicker": "8.2.0",
     "@react-native-masked-view/masked-view": "0.3.2",
@@ -50,10 +50,13 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "@expo/webpack-config": "~19.0.1",
+    "@expo/webpack-config": "^19.0.1",
     "@testing-library/react-native": "^12.5.0",
     "@types/react": "~18.3.12",
     "typescript": "^5.3.3"
   },
-  "private": true
+  "private": true,
+  "overrides": {
+    "semver": "^7.5.2"
+  }
 }
