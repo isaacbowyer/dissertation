@@ -4,7 +4,7 @@ import { services } from "../../services";
 import { calculateNumberOfPages } from "../../utils/calculateNumberOfPages";
 import { ITrackedSymptomsResponse } from "../../entities/ITrackedSymptomsResponse";
 import { ITrackedSymptom } from "../../entities/ITrackedSymptom";
-import { auth } from "../../config/firebase/base";
+import { auth } from "../../config/firebase";
 import { useAuthenticationContext } from "../../contexts/useAuthenticationContext";
 import { SERVICES_LIMITS } from "../../config/services";
 import { getLimit } from "../../utils/getLimit";

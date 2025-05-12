@@ -15,7 +15,7 @@ import { IAdvancedSearchStateKey } from "../../../entities/IAdvancedSearchStateK
 import { IAdvancedSearchStateKeyValue } from "../../../entities/IAdvancedSearchStateKeyValue";
 import { useCurrentEntityContext } from "../../../contexts/useCurrentEntityContext";
 import { useTrackedSymptoms } from "../../../hooks/useTrackedSymptoms";
-import { auth } from "../../../config/firebase/base";
+import { auth } from "../../../config/firebase";
 import { useSeverityRatings } from "../../../hooks/useSeverityRatings";
 import { createSearchConfig } from "../../../utils/createSearchConfig";
 import { ITrackedSymptomsState } from "../../../entities/ITrackedSymptomsState";

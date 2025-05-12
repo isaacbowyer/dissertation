@@ -7,7 +7,7 @@ import {
   where,
 } from "firebase/firestore";
 import { ISymptomScore } from "../../entities/ISymptomScore";
-import { db } from "../../config/firebase/base";
+import { db } from "../../config/firebase";
 import { scoresAdapter } from "../../utils/scoresAdapter";
 import { IUserIdWithSymptomId } from "../../entities/IUserIdWithSymptomId";
 

@@ -1,5 +1,5 @@
 import { updateEmail, updatePassword } from "firebase/auth";
-import { auth } from "../../config/firebase/base";
+import { auth } from "../../config/firebase";
 import { ICredential } from "../../entities/ICredential";
 
 export const updateAuth: IUpdateAuthService = async (props) => {

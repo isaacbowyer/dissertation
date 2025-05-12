@@ -5,7 +5,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { db } from "../../config/firebase/base";
+import { db } from "../../config/firebase";
 
 export const deleteSymptomScores: IDeleteSymptomScoresService = async ({
   userId,

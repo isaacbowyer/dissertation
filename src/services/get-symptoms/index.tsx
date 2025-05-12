@@ -1,4 +1,4 @@
-import { db } from "../../config/firebase/base";
+import { db } from "../../config/firebase";
 import { symptomsAdapter } from "../../utils/symptomsAdapter";
 import { ISymptom } from "../../entities/ISymptom";
 import { collection, getDocs } from "firebase/firestore";

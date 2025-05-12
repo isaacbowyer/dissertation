@@ -1,5 +1,5 @@
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
-import { db } from "../../config/firebase/base";
+import { db } from "../../config/firebase";
 import { resourcesAdapter } from "../../utils/resourcesAdapter";
 import { sliceData } from "../../utils/sliceData";
 

@@ -9,7 +9,7 @@ import {
   startAt,
   where,
 } from "firebase/firestore";
-import { db } from "../../config/firebase/base";
+import { db } from "../../config/firebase";
 import { resorcesAdapter } from "../../utils/resourcesAdapter";
 import { IResourceResponse } from "../../entities/IResourceResponse";
 import { IResourceCategory } from "../../entities/IResourceCategory";

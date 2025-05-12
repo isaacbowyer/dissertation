@@ -10,7 +10,7 @@ import { filterSymptoms } from "../../../utils/filterSymptoms";
 import { useSeverityRatings } from "../../../hooks/useSeverityRatings";
 import { useTrackedSymptoms } from "../../../hooks/useTrackedSymptoms";
 import { services } from "../../../services";
-import { auth } from "../../../config/firebase/base";
+import { auth } from "../../../config/firebase/";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ISymptomState } from "../../../entities/ISymptomState";
@@ -121,7 +121,7 @@ export const AddSymptomProvider = ({ children }: IProviderProps) => {
       await services.post.score({
         userId: auth?.currentUser?.uid,
         symptomId: formState?.selectedSymptom?.id,
-        currentSeverity: formState?.currentSeverity,
+        currentSeverity: 1,
         comment: "Added First Severity Rating",
       });
 

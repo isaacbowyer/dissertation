@@ -1,5 +1,5 @@
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../config/firebase/base";
+import { db } from "../../config/firebase";
 import { optionsAdapter } from "../../utils/optionsAdapter";
 import { IOption } from "../../entities/IOption";
 

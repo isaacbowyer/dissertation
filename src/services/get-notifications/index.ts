@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import { INotificationResponse } from "../../entities/INotificationResponse";
 import { INotificationTag } from "../../entities/INotificationTag";
-import { db } from "../../config/firebase/base";
+import { db } from "../../config/firebase";
 import { notificationsAdapter } from "../../utils/notificationsAdapter";
 
 export const getNotifications: IGetNotificationsService = async (props) => {

@@ -4,7 +4,6 @@ import { useCustomToast } from "../../hooks/useCustomToast";
 import { useQuery } from "@tanstack/react-query";
 import { services } from "../../services";
 import { useAuthenticationContext } from "../useAuthenticationContext";
-import { auth } from "../../config/firebase/base";
 import { INotificationResponse } from "../../entities/INotificationResponse";
 import { INotificationState } from "../../entities/INotificationState";
 import { INotificationTag } from "../../entities/INotificationTag";
@@ -17,6 +16,7 @@ import { calculateNumberOfPages } from "../../utils/calculateNumberOfPages";
 import { formatTitleWithCount } from "../../utils/formatTitleWithCount";
 import { IRenderOptionsOutput } from "../../entities/IRenderOptionsOutput";
 import { INotification } from "../../entities/INotification";
+import { auth } from "../../config/firebase";
 
 const INIITAL_DATA: INotificationResponse = {
   count: 0,

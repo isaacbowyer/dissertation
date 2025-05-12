@@ -1,5 +1,5 @@
 import { deleteDoc, doc } from "firebase/firestore";
-import { db } from "../../config/firebase/base";
+import { db } from "../../config/firebase";
 
 export const deleteTrackedSymptom: IDeleteTrackedSymptomService = async (
   id

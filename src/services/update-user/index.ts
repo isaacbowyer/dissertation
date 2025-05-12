@@ -1,5 +1,5 @@
 import { updateDoc, doc } from "firebase/firestore";
-import { db } from "../../config/firebase/base";
+import { db } from "../../config/firebase";
 import { IUser } from "../../entities/IUser";
 
 export const updateUser: IUpdateUserService = async (user) => {

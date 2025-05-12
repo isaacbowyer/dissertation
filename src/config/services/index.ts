@@ -1,5 +1,3 @@
-import { Resend } from "resend";
-
 export const DEFAULT_LIMIT = 2;
 export const EXPANDED_LIMIT = 5;
 export const UNLIMITED = 1000;

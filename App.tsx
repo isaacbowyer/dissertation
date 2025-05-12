@@ -11,8 +11,6 @@ const isAndorid = Platform.OS === "android";
 export const queryClient = new QueryClient();
 
 export default function App() {
-  console.log("API Key:", process.env.EXPO_PUBLIC_FIREBASE_API_KEY); // ← log here
-
   return (
     <>
       <SafeAreaView

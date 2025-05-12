@@ -6,7 +6,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { db } from "../../config/firebase/base";
+import { db } from "../../config/firebase";
 import { IResource } from "../../entities/IResource";
 import { resourceWithLikeAdapter } from "../../utils/resourceWithLikeAdapter";
 import { IResourceWithLike } from "../../entities/IResourceWithLike";

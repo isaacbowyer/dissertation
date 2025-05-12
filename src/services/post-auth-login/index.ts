@@ -1,5 +1,5 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../config/firebase/base";
+import { auth } from "../../config/firebase";
 import { ILoginData } from "../../entities/ILoginData";
 
 export const postAuthLogin: IPostAuthLoginService = async (payload) => {

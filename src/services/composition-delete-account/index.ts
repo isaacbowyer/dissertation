@@ -5,7 +5,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { auth, db } from "../../config/firebase/base";
+import { auth, db } from "../../config/firebase";
 
 export const deleteAccount: IDeleteAccountService = async () => {
   const user = auth.currentUser;

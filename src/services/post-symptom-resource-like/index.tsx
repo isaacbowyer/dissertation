@@ -1,5 +1,5 @@
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "../../config/firebase/base";
+import { db } from "../../config/firebase";
 
 export const postSymptomResourceLike: IPostSymptomResourceLikeService = async (
   props

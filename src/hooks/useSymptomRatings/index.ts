@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCustomToast } from "../useCustomToast";
 import { services } from "../../services";
-import { auth } from "../../config/firebase/base";
+import { auth } from "../../config/firebase/";
 import { useAuthenticationContext } from "../../contexts/useAuthenticationContext";
 import { useCurrentEntityContext } from "../../contexts/useCurrentEntityContext";
 import { ISymptomScore } from "../../entities/ISymptomScore";

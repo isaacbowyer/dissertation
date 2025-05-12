@@ -1,5 +1,5 @@
 import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "../../config/firebase/base";
+import { auth } from "../../config/firebase";
 
 export const postAuthForgotPassword: IPostAuthForgotPasswordService = async (
   email: string

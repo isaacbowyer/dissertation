@@ -1,5 +1,5 @@
 import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../config/firebase/base";
+import { db } from "../../config/firebase";
 
 export const postSymptomScore: IPostSymptomScoreService = async (props) => {
   await addDoc(collection(db, "symptom_scores"), {

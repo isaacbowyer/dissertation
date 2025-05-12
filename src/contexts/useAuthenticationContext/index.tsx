@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { IProviderProps } from "../../entities/IProviderProps";
 import { ILoginData } from "../../entities/ILoginData";
 import { services } from "../../services";
@@ -7,11 +7,9 @@ import { VALIDATION_ERRORS } from "../../data/errors";
 import { validatePassword } from "../../utils/validatePassword";
 import { useCustomToast } from "../../hooks/useCustomToast";
 import * as WebBrowser from "expo-web-browser";
-import * as Google from "expo-auth-session/providers/google";
-import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
-import { auth } from "../../config/firebase/base";
-import { AuthRequestPromptOptions, AuthSessionResult } from "expo-auth-session";
 import { sendEmail } from "../../utils/sendEmail";
+import { auth } from "../../config/firebase";
+import { IAuthenticationContextFormState } from "../../entities/IAuthenticationContextFormState";
 
 const AuthenticationContext = createContext({} as IAuthenticationContext);
 

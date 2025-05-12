@@ -1,5 +1,5 @@
 import { doc, deleteDoc } from "firebase/firestore";
-import { db } from "../../config/firebase/base";
+import { db } from "../../config/firebase";
 
 export const deleteSymptomResourceLike: IDeleteSymptomResourceLikeService =
   async (props) => {
