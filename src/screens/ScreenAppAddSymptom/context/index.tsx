@@ -110,18 +110,21 @@ export const AddSymptomProvider = ({ children }: IProviderProps) => {
   const handleOnSubmit = async () => {
     try {
       _handleSetLoading(true);
+
+      const currentSeverity = Number(formState?.currentSeverity?.name);
+
       await services.post.trackedSymptom({
         userId: auth?.currentUser?.uid,
         symptomId: formState?.selectedSymptom?.id,
         targetDate: formState?.targetDate,
-        targetSeverity: formState?.targetSeverity,
-        currentSeverity: formState?.currentSeverity,
+        targetSeverity: Number(formState?.targetSeverity?.name),
+        currentSeverity: currentSeverity,
       });
 
       await services.post.score({
         userId: auth?.currentUser?.uid,
         symptomId: formState?.selectedSymptom?.id,
-        currentSeverity: 1,
+        currentSeverity: currentSeverity,
         comment: "Added First Severity Rating",
       });
 

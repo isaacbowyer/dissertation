@@ -60,6 +60,7 @@ export const AddSymptomProgressProvider = ({ children }: IProviderProps) => {
       const formattedCurrentSeverity = adjustSeverityValue(
         formState?.currentSeverity
       );
+
       const value = Number(formattedCurrentSeverity?.name);
 
       await services.post.score({
