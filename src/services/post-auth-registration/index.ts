@@ -2,7 +2,7 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
-import { auth, db } from "../../config/firebase";
+import { auth, db } from "../../config/firebase/base";
 import { IOption } from "../../entities/IOption";
 import { addDoc, collection } from "firebase/firestore";
 

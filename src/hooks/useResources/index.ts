@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useCustomToast } from "../useCustomToast";
 import { services } from "../../services";
-import { auth } from "../../config/firebase";
+import { auth } from "../../config/firebase/base";
 import { useAuthenticationContext } from "../../contexts/useAuthenticationContext";
 import { IResourceResponse } from "../../entities/IResourceResponse";
 import { calculateNumberOfPages } from "../../utils/calculateNumberOfPages";

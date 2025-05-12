@@ -9,7 +9,7 @@ import { useCustomToast } from "../../hooks/useCustomToast";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import { GoogleAuthProvider, signInWithCredential } from "firebase/auth";
-import { auth } from "../../config/firebase";
+import { auth } from "../../config/firebase/base";
 import { AuthRequestPromptOptions, AuthSessionResult } from "expo-auth-session";
 import { sendEmail } from "../../utils/sendEmail";
 

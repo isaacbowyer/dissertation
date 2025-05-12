@@ -1,5 +1,5 @@
 import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../config/firebase";
+import { db } from "../../config/firebase/base";
 import { IOption } from "../../entities/IOption";
 
 export const postTrackedSymptom: IPostSymptomService = async (props) => {

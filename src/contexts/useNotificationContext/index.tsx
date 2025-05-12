@@ -4,7 +4,7 @@ import { useCustomToast } from "../../hooks/useCustomToast";
 import { useQuery } from "@tanstack/react-query";
 import { services } from "../../services";
 import { useAuthenticationContext } from "../useAuthenticationContext";
-import { auth } from "../../config/firebase";
+import { auth } from "../../config/firebase/base";
 import { INotificationResponse } from "../../entities/INotificationResponse";
 import { INotificationState } from "../../entities/INotificationState";
 import { INotificationTag } from "../../entities/INotificationTag";

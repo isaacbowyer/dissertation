@@ -9,7 +9,7 @@ import {
   startAfter,
   where,
 } from "firebase/firestore";
-import { db } from "../../config/firebase";
+import { db } from "../../config/firebase/base";
 import { ISymptom } from "../../entities/ISymptom";
 import { applyFilters } from "../../utils/applyFilters";
 import { sliceData } from "../../utils/sliceData";

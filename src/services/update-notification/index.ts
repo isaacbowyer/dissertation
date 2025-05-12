@@ -1,5 +1,5 @@
 import { updateDoc, doc } from "firebase/firestore";
-import { db } from "../../config/firebase";
+import { db } from "../../config/firebase/base";
 
 export const updateNotification: IUpdateNotificationService = async (props) => {
   const docRef = doc(db, "notifications", props?.id);

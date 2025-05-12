@@ -1,5 +1,5 @@
 import { updateDoc, doc } from "firebase/firestore";
-import { db } from "../../config/firebase";
+import { db } from "../../config/firebase/base";
 
 export const updateTrackedSymptom: IUpdateTrackedSymptomService = async (
   props

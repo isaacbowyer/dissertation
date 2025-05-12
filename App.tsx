@@ -5,15 +5,14 @@ import { AppNavigation } from "./src/navigation/AppNavigation";
 import { Platform, StatusBar } from "react-native";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { LogBox } from "react-native";
 
 const isAndorid = Platform.OS === "android";
-
-LogBox.ignoreAllLogs();
 
 export const queryClient = new QueryClient();
 
 export default function App() {
+  console.log("API Key:", process.env.EXPO_PUBLIC_FIREBASE_API_KEY); // ← log here
+
   return (
     <>
       <SafeAreaView

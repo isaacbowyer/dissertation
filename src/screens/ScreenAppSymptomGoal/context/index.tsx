@@ -10,7 +10,7 @@ import { useSeverityRatings } from "../../../hooks/useSeverityRatings";
 import { IOption } from "../../../entities/IOption";
 import { IScore } from "../../../entities/IScore";
 import { useUsersContext } from "../../../contexts/useUsersContext";
-import { auth } from "../../../config/firebase";
+import { auth } from "../../../config/firebase/base";
 import { Linking } from "react-native";
 import { ISymptomGoalStateKey } from "../../../entities/ISymptomGoalStateKey";
 import { ISymptomGoalStateKeyValue } from "../../../entities/ISymptomGoalStateKeyValue";

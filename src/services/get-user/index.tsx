@@ -1,5 +1,5 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../../config/firebase";
+import { db } from "../../config/firebase/base";
 import { IUser } from "../../entities/IUser";
 import { usersAdapter } from "../../utils/usersAdapter";
 

@@ -10,7 +10,7 @@ import { filterSymptoms } from "../../../utils/filterSymptoms";
 import { useSeverityRatings } from "../../../hooks/useSeverityRatings";
 import { useTrackedSymptoms } from "../../../hooks/useTrackedSymptoms";
 import { services } from "../../../services";
-import { auth } from "../../../config/firebase";
+import { auth } from "../../../config/firebase/base";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { ISymptomState } from "../../../entities/ISymptomState";

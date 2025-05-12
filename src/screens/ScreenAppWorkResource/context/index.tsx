@@ -6,7 +6,7 @@ import { services } from "../../../services";
 import { SERVICES_LIMITS } from "../../../config/services";
 import { IOption } from "../../../entities/IOption";
 import { useUsersContext } from "../../../contexts/useUsersContext";
-import { auth } from "../../../config/firebase";
+import { auth } from "../../../config/firebase/base";
 import { Linking } from "react-native";
 import { findOption } from "../../../utils/findOption";
 import { useResourceTypesContext } from "../../../contexts/useResourceTypesContext";

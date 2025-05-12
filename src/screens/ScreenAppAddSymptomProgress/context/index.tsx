@@ -5,7 +5,7 @@ import { INITAL_OPTION } from "../../../data/defaultValues";
 import { IOption } from "../../../entities/IOption";
 import { useSeverityRatings } from "../../../hooks/useSeverityRatings";
 import { services } from "../../../services";
-import { auth } from "../../../config/firebase";
+import { auth } from "../../../config/firebase/base";
 import { ParamListBase, useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { IAddSymptomProgressFormState } from "../../../entities/IAddSymptomProgressFormState";

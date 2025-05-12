@@ -16,7 +16,7 @@ import { IPersonalAccountState } from "../../../entities/IPersonalAccountState";
 import { IPersonalAccountStateKey } from "../../../entities/IPersonalAccountStateKey";
 import { IPersonalAccountStateKeyValue } from "../../../entities/IPersonalAccountStateKeyValue";
 import { IPersonalAccountStateValidationError } from "../../../entities/IPersonalAccountStateValidationError";
-import { auth } from "../../../config/firebase";
+import { auth } from "../../../config/firebase/base";
 import { INITAL_OPTION } from "../../../data/defaultValues";
 import { findOption } from "../../../utils/findOption";
 import { validateUpdatePassword } from "../../../utils/validateUpdatePassword";
